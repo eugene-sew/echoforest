@@ -2,10 +2,8 @@
 import Link from "next/link";
 
 import {
-  CircleUser,
   Home,
   LineChart,
-  Menu,
   Package,
   Package2,
   PanelLeft,
@@ -69,7 +67,7 @@ export default function Control({ children }: { children: React.ReactNode }) {
             </Link>
             {links.map(({ title, icon: Icon, link }) => {
               const isActive = pathname === link;
-
+              // @ts-ignore
               return (
                 <Tooltip key={link}>
                   <TooltipTrigger asChild>
