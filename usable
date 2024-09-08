@@ -1,0 +1,40 @@
+import { MdFence, MdSpaceDashboard } from "react-icons/md";
+import { MdNotificationsActive } from "react-icons/md";
+import { BiSolidNetworkChart } from "react-icons/bi";
+import { BsHddNetworkFill } from "react-icons/bs";
+import { MdManageAccounts } from "react-icons/md";
+
+const links = [
+  {
+    title: "Overview",
+    icon: MdSpaceDashboard,
+    link: "/",
+  },
+  {
+    title: "Alerts",
+    icon: MdNotificationsActive,
+    link: "/alerts",
+  },
+  {
+    title: "Deploy",
+    icon: BiSolidNetworkChart,
+    link: "/deploy",
+  },
+  {
+    title: "Devices",
+    icon: BsHddNetworkFill,
+    link: "/devices",
+  },
+  {
+    title: "Geo-Fence",
+    icon: MdFence,
+    link: "/geofence",
+  },
+  //   {
+  //     title: "Account",
+  //     icon: MdManageAccounts,
+  //     link: "/account",
+  //   },
+];
+
+export default links;
