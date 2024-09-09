@@ -1,26 +1,10 @@
 "use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import Link from "next/link";
 
-import {
-  Home,
-  LineChart,
-  LogOut,
-  Package,
-  Package2,
-  PanelLeft,
-  Search,
-  Settings,
-  ShoppingCart,
-  Users2,
-} from "lucide-react";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+import { LogOut, PanelLeft, Settings } from "lucide-react";
+
 import {
   Tooltip,
   TooltipContent,
@@ -37,7 +21,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import links from "@/components/sidebar/sidedata";
 import { usePathname } from "next/navigation";
