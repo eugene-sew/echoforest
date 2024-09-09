@@ -16,7 +16,6 @@ export default function Ring() {
       <CardContent className="flex gap-4 p-4">
         <div className="grid items-center gap-2">
           <div className="grid flex-1 auto-rows-min gap-0.5">
-            <div className="text-sm text-muted-foreground">Inactive</div>
             <div className="flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
               8
               <span className="text-sm font-normal text-muted-foreground">
@@ -25,7 +24,6 @@ export default function Ring() {
             </div>
           </div>
           <div className="grid flex-1 auto-rows-min gap-0.5">
-            <div className="text-sm text-muted-foreground">Pending</div>
             <div className="flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
               5
               <span className="text-sm font-normal text-muted-foreground">
@@ -34,9 +32,11 @@ export default function Ring() {
             </div>
           </div>
           <div className="grid flex-1 auto-rows-min gap-0.5">
-            <div className="text-sm text-muted-foreground">Active</div>
             <div className="flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
-              12
+              2
+              <span className="text-sm font-normal text-muted-foreground">
+                Active
+              </span>
             </div>
           </div>
         </div>

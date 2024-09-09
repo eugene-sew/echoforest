@@ -2,7 +2,7 @@ import { Component, BellRing, Workflow, Router, GlobeLock } from "lucide-react";
 
 interface SideLink {
   title: string;
-  icon: React.ComponentType;
+  icon: any;
   link: string;
 }
 
@@ -15,23 +15,23 @@ const links: SideLink[] = [
   {
     title: "Alerts",
     icon: BellRing,
-    link: "control/alerts",
+    link: "/control/alerts",
   },
   {
     title: "Deploy",
     icon: Workflow,
-    link: "control/deploy",
+    link: "/control/deploy",
   },
   {
     title: "Devices",
     icon: Router,
-    link: "control/devices",
+    link: "/control/devices",
   },
-  {
-    title: "Geo-Fence",
-    icon: GlobeLock,
-    link: "control/geofence",
-  },
+  // {
+  //   title: "Geo-Fence",
+  //   icon: GlobeLock,
+  //   link: "control/geofence",
+  // },
   //   {
   //     title: "Account",
   //     icon: MdManageAccounts,

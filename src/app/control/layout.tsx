@@ -4,6 +4,7 @@ import Link from "next/link";
 import {
   Home,
   LineChart,
+  LogOut,
   Package,
   Package2,
   PanelLeft,
@@ -41,6 +42,8 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import links from "@/components/sidebar/sidedata";
 import { usePathname } from "next/navigation";
 import Logo from "../../../public/leaf.png";
+import DynamicBreadcrumb from "@/components/dashboard/dynamicbread";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export const description =
   "An application shell with a header and main content area. The header has a navbar, a search input and and a user nav dropdown. The user nav is toggled by a button with an avatar image.";
@@ -57,8 +60,8 @@ export default function Control({ children }: { children: React.ReactNode }) {
               className="group flex flex-col h-fit w-full shrink-0 items-center justify-center gap-2 ">
               <Image
                 src={Logo}
-                width={70}
-                height={70}
+                width={60}
+                height={60}
                 alt="logo"
               />
               <span className="text-lg font-bold text-[#91918B] ">
@@ -93,7 +96,10 @@ export default function Control({ children }: { children: React.ReactNode }) {
                 <Link
                   href="#"
                   className="flex h-9 w-full items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8">
-                  <Settings className="h-5 w-5 stroke-gray-700" />
+                  <Settings
+                    className="h-5 w-5"
+                    color="#91918B"
+                  />
                   <span className="">Settings</span>
                 </Link>
               </TooltipTrigger>
@@ -120,96 +126,72 @@ export default function Control({ children }: { children: React.ReactNode }) {
               <nav className="grid gap-6 text-lg font-medium">
                 <Link
                   href="#"
-                  className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base">
-                  <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
-                  <span className="">Acme Inc</span>
+                  className="group flex flex-col h-fit w-full shrink-0 items-center justify-center gap-2 ">
+                  <Image
+                    src={Logo}
+                    width={70}
+                    height={70}
+                    alt="logo"
+                  />
+                  <span className="text-lg font-bold text-[#91918B] ">
+                    EchoForest
+                  </span>
                 </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground">
-                  <Home className="h-5 w-5" />
-                  Dashboard
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground">
-                  <ShoppingCart className="h-5 w-5" />
-                  Orders
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-foreground">
-                  <Package className="h-5 w-5" />
-                  Products
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground">
-                  <Users2 className="h-5 w-5" />
-                  Customers
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground">
-                  <LineChart className="h-5 w-5" />
-                  Settings
-                </Link>
+                {links.map(({ title, icon: Icon, link }) => {
+                  const isActive = pathname === link;
+                  // @ts-ignore
+                  return (
+                    <Tooltip key={link}>
+                      <TooltipTrigger asChild>
+                        <Link
+                          href={link}
+                          className={`flex h-9 w-full items-center rounded-lg transition-colors px-4 text-sm ${
+                            isActive
+                              ? "bg-primary text-primary-foreground"
+                              : "text-muted-foreground hover:text-[#85976e] "
+                          } md:h-8 md:w-full`}>
+                          <Icon className="h-5 w-5" />
+                          <span className="ml-2">{title}</span>
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent side="right">{title}</TooltipContent>
+                    </Tooltip>
+                  );
+                })}
               </nav>
             </SheetContent>
           </Sheet>
-          <Breadcrumb className="hidden md:flex">
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link href="#">Dashboard</Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link href="#">Products</Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>All Products</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-          <div className="relative ml-auto flex-1 md:grow-0">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search..."
-              className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-            />
+          <DynamicBreadcrumb />
+          <div className="flex w-full justify-end">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="overflow-hidden rounded-full">
+                  <Avatar>
+                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="bg-black px-3 py-2">
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Support</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <Button variant={"destructive"}>
+                    <LogOut className="mr-2 h-4 w-4" /> Log out
+                  </Button>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                className="overflow-hidden rounded-full">
-                <Image
-                  src="/placeholder-user.jpg"
-                  width={36}
-                  height={36}
-                  alt="Avatar"
-                  className="overflow-hidden rounded-full"
-                />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Support</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Logout</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </header>
-        <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
+        <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 text-gray-800">
           {children}
         </main>
       </div>
