@@ -31,11 +31,10 @@ import {
 } from "@/components/ui/dialog";
 import { fetchDeployments } from "@/utils/api";
 
-// Dynamically import MapContainer
-const MapContainer = dynamic(
-  () => import("react-leaflet").then((mod) => mod.MapContainer),
-  { ssr: false }
-);
+// Dynamically import MapContainer with no SSR
+const MapWithNoSSR = dynamic(() => import("@/components/dashboard/map"), {
+  ssr: false,
+});
 
 // Dynamically import TileLayer
 const TileLayer = dynamic(
@@ -272,31 +271,7 @@ export default function DeployPage() {
         </Table>
         <div>
           <h2 className="text-lg font-semibold mb-2 text-gray-600">Map View</h2>
-          {isMounted && (
-            <MapContainer
-              center={GHANA_CENTER}
-              zoom={GHANA_ZOOM}
-              scrollWheelZoom={false}
-              style={{ height: "400px", width: "100%" }}
-              className="-z-0 rounded-md shadow">
-              <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              />
-              {filteredDeployments.map((deployment) => (
-                <Marker
-                  key={deployment.id}
-                  position={[deployment.lat, deployment.lng]}
-                  icon={DefaultIcon}>
-                  <Popup>
-                    Device ID: {deployment.deviceId}
-                    <br />
-                    Alert Numbers: {deployment.alertNumbers.join(", ")}
-                  </Popup>
-                </Marker>
-              ))}
-            </MapContainer>
-          )}
+          {isMounted && <MapWithNoSSR deployments={filteredDeployments} />}
         </div>
       </div>
     </div>
