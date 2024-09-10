@@ -1,7 +1,8 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/no-unused-vars */
 
-import { useState } from "react";
+import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -45,6 +46,12 @@ const mockDevices: Device[] = [
 ];
 
 export default function DeployPage() {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const [devices, setDevices] = useState<Device[]>(mockDevices);
   const [deployments, setDeployments] = useState<Deployment[]>([]);
   const [selectedDevice, setSelectedDevice] = useState<string>("");
