@@ -1,4 +1,5 @@
 import { Deployment, TopRegion, TrendData } from "../types/deployment";
+import { Device } from "../types/deployment"; // Import the Device interface
 
 const mockDeployments: Deployment[] = [
   {
@@ -129,4 +130,32 @@ export async function fetchTrendData(): Promise<TrendData[]> {
     date,
     alertCount: Math.floor(Math.random() * 50),
   }));
+}
+
+// devices
+export async function fetchDevices(): Promise<Device[]> {
+  await new Promise((resolve) => setTimeout(resolve, 800)); // Simulate network delay
+  return [
+    {
+      id: "DEV001",
+      status: "online",
+      powerLevel: 80,
+      health: "Good",
+      ipAddress: "192.168.1.100",
+      temperature: 25,
+      humidity: 60,
+      uptime: 86400,
+    },
+    {
+      id: "DEV002",
+      status: "offline",
+      powerLevel: 20,
+      health: "Poor",
+      ipAddress: "192.168.1.101",
+      temperature: 28,
+      humidity: 55,
+      uptime: 0,
+    },
+    // Add more mock devices as needed
+  ];
 }

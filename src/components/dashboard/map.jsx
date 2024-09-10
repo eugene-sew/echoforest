@@ -5,21 +5,22 @@ import { useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
 const GHANA_CENTER = [7.9465, -1.0232];
 const GHANA_ZOOM = 7;
 
-const Map = ({ deployments }) => {
-  useEffect(() => {
-    // Load Leaflet icon images
-    delete L.Icon.Default.prototype._getIconUrl;
-    L.Icon.Default.mergeOptions({
-      iconRetinaUrl: "/images/marker-icon-2x.png",
-      iconUrl: "/images/marker-icon.png",
-      shadowUrl: "/images/marker-shadow.png",
-    });
-  }, []);
+// Fix for the missing icon issue
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconUrl: markerIcon.src,
+  iconRetinaUrl: markerIcon2x.src,
+  shadowUrl: markerShadow.src,
+});
 
+const Map = ({ deployments }) => {
   return (
     <MapContainer
       center={GHANA_CENTER}

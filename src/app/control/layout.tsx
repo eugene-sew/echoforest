@@ -39,7 +39,7 @@ export default function Control({ children }: { children: React.ReactNode }) {
         <TooltipProvider>
           <nav className="flex flex-col items-center gap-4 px-2 sm:py-5 w-full">
             <Link
-              href="#"
+              href="/control"
               className="group flex flex-col h-fit w-full shrink-0 items-center justify-center gap-2 ">
               <Image
                 src={Logo}

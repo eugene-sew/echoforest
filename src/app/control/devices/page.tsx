@@ -262,7 +262,7 @@ export default function DevicesPage() {
               Add New Device
             </Button>
           </DialogTrigger>
-          <DialogContent className="bg-white">
+          <DialogContent className="bg-white text-gray-700">
             <DialogHeader>
               <DialogTitle>Add New Device</DialogTitle>
             </DialogHeader>
