@@ -22,12 +22,11 @@ import Ring from "@/components/dashboard/ring";
 import Map from "@/components/dashboard/map";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fetchDevices, fetchDeployments } from "@/utils/api";
-import { Device, Deployment } from "@/types/deployment"; // Import types from the correct location
 
 export default function ControlsPage() {
   const [isLoading, setIsLoading] = useState(true);
-  const [devices, setDevices] = useState<Device[]>([]);
-  const [deployments, setDeployments] = useState<Deployment[]>([]);
+  const [devices, setDevices] = useState([]);
+  const [deployments, setDeployments] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,11 +36,10 @@ export default function ControlsPage() {
           fetchDevices(),
           fetchDeployments(),
         ]);
-        setDevices(devicesData as Device[]); // Type assertion
-        setDeployments(deploymentsData as Deployment[]); // Type assertion
+        setDevices(devicesData);
+        setDeployments(deploymentsData);
       } catch (error) {
         console.error("Error fetching data:", error);
-        // Handle error state here if needed
       } finally {
         setIsLoading(false);
       }
