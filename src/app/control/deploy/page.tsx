@@ -57,7 +57,7 @@ const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), {
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
 
-let DefaultIcon = L.icon({
+const DefaultIcon = L.icon({
   iconUrl: icon.src,
   shadowUrl: iconShadow.src,
   iconSize: [25, 41],
