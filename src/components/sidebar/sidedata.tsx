@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Component, BellRing, Workflow, Router, GlobeLock } from "lucide-react";
+import { Component, BellRing, Workflow, Router } from "lucide-react";
 
 interface SideLink {
   title: string;
