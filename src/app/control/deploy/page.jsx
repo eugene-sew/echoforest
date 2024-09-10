@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/no-unused-vars */
 
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
@@ -32,9 +33,6 @@ const MapWithNoSSR = dynamic(() => import("@/components/dashboard/map"), {
   ssr: false,
   loading: () => <p>Loading map...</p>,
 });
-
-const GHANA_CENTER = [7.9465, -1.0232];
-const GHANA_ZOOM = 7;
 
 const mockDevices = [
   { id: "1", name: "Device 1", lat: 5.3018, lng: -1.993 },
