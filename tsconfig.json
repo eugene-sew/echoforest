@@ -28,7 +28,8 @@
     ".next/types/**/*.ts",
     "src/app/control/deploy/page.jsx",
     "src/components/dashboard/map.jsx",
-    "src/app/control/layout.tsx"
+    "src/app/control/layout.jsx",
+    "src/app/control/page.jsx"
   ],
   "exclude": ["node_modules"]
 }

@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { AlertTriangle, Battery, Router, Trees, Wifi } from "lucide-react";
 import {
@@ -24,9 +25,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { fetchDevices, fetchDeployments } from "@/utils/api";
 
 export default function ControlsPage() {
+  const [isMounted, setIsMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [devices, setDevices] = useState([]);
   const [deployments, setDeployments] = useState([]);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,6 +52,9 @@ export default function ControlsPage() {
 
     fetchData();
   }, []);
+  if (!isMounted) {
+    return null; // or a loading spinner
+  }
 
   return (
     <>

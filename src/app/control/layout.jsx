@@ -1,5 +1,5 @@
 "use client";
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/no-unused-vars */
 
 import Link from "next/link";
 
@@ -27,12 +27,18 @@ import { usePathname } from "next/navigation";
 import Logo from "../../../public/leaf.png";
 import DynamicBreadcrumb from "@/components/dashboard/dynamicbread";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useEffect, useState } from "react";
 
-export const description =
-  "An application shell with a header and main content area. The header has a navbar, a search input and and a user nav dropdown. The user nav is toggled by a button with an avatar image.";
-
-export default function Control({ children }: { children: React.ReactNode }) {
+export default function Control({ children }) {
+  const [isMounted, setIsMounted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+  if (!isMounted) {
+    return null; // or a loading spinner
+  }
   return (
     <div className="flex min-h-screen w-full flex-col bg-[#F9FAEF]">
       <aside className="fixed inset-y-0 left-0 z-10 hidden w-36 flex-col border-r bg-background sm:flex">
