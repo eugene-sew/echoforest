@@ -20,9 +20,31 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { LatLngExpression } from "leaflet";
+
+// Dynamically import MapContainer
+const MapContainer = dynamic(
+  () => import("react-leaflet").then((mod) => mod.MapContainer),
+  { ssr: false }
+);
+
+// Dynamically import TileLayer
+const TileLayer = dynamic(
+  () => import("react-leaflet").then((mod) => mod.TileLayer),
+  { ssr: false }
+);
+
+// Dynamically import Marker
+const Marker = dynamic(
+  () => import("react-leaflet").then((mod) => mod.Marker),
+  { ssr: false }
+);
+
+// Dynamically import Popup
+const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), {
+  ssr: false,
+});
 
 interface Device {
   id: string;
@@ -145,27 +167,29 @@ export default function DeployPage() {
         </div>
         <div>
           <h2 className="text-xl font-semibold mb-2">Map View</h2>
-          <MapContainer
-            center={[51.505, -0.09] as LatLngExpression}
-            zoom={13}
-            scrollWheelZoom={false}
-            style={{ height: "400px", width: "100%" }}>
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            />
-            {deployments.map((deployment) => (
-              <Marker
-                key={deployment.id}
-                position={[deployment.lat, deployment.lng]}>
-                <Popup>
-                  Device ID: {deployment.deviceId}
-                  <br />
-                  Alert Numbers: {deployment.alertNumbers.join(", ")}
-                </Popup>
-              </Marker>
-            ))}
-          </MapContainer>
+          {isMounted && (
+            <MapContainer
+              center={[51.505, -0.09] as LatLngExpression}
+              zoom={13}
+              scrollWheelZoom={false}
+              style={{ height: "400px", width: "100%" }}>
+              <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              />
+              {deployments.map((deployment) => (
+                <Marker
+                  key={deployment.id}
+                  position={[deployment.lat, deployment.lng]}>
+                  <Popup>
+                    Device ID: {deployment.deviceId}
+                    <br />
+                    Alert Numbers: {deployment.alertNumbers.join(", ")}
+                  </Popup>
+                </Marker>
+              ))}
+            </MapContainer>
+          )}
         </div>
       </div>
     </div>
