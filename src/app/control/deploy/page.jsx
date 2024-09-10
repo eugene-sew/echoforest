@@ -1,5 +1,4 @@
 "use client";
-/* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/no-unused-vars */
 
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
@@ -20,8 +19,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import "leaflet/dist/leaflet.css";
-import L, { LatLngExpression } from "leaflet";
 import {
   Dialog,
   DialogContent,
@@ -31,88 +28,40 @@ import {
 } from "@/components/ui/dialog";
 import { fetchDeployments } from "@/utils/api";
 
-// Dynamically import MapContainer with no SSR
 const MapWithNoSSR = dynamic(() => import("@/components/dashboard/map"), {
   ssr: false,
   loading: () => <p>Loading map...</p>,
 });
 
-// Dynamically import TileLayer
-const TileLayer = dynamic(
-  () => import("react-leaflet").then((mod) => mod.TileLayer),
-  { ssr: false }
-);
+const GHANA_CENTER = [7.9465, -1.0232];
+const GHANA_ZOOM = 7;
 
-// Dynamically import Marker
-const Marker = dynamic(
-  () => import("react-leaflet").then((mod) => mod.Marker),
-  { ssr: false }
-);
-
-// Dynamically import Popup
-const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), {
-  ssr: false,
-});
-
-import icon from "leaflet/dist/images/marker-icon.png";
-import iconShadow from "leaflet/dist/images/marker-shadow.png";
-
-const DefaultIcon = L.icon({
-  iconUrl: icon.src,
-  shadowUrl: iconShadow.src,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  tooltipAnchor: [16, -28],
-  shadowSize: [41, 41],
-});
-
-L.Marker.prototype.options.icon = DefaultIcon;
-
-interface Device {
-  id: string;
-  name: string;
-  lat: number;
-  lng: number;
-}
-
-interface Deployment {
-  id: string;
-  deviceId: string;
-  lat: number;
-  lng: number;
-  alertNumbers: string[];
-}
-
-const mockDevices: Device[] = [
+const mockDevices = [
   { id: "1", name: "Device 1", lat: 5.3018, lng: -1.993 },
   { id: "2", name: "Device 2", lat: 6.2049, lng: -1.6642 },
   { id: "3", name: "Device 3", lat: 5.961, lng: -1.7798 },
   { id: "4", name: "Device 4", lat: 5.4326, lng: -2.1428 },
   { id: "5", name: "Device 5", lat: 6.4557, lng: -1.9823 },
 ];
-const GHANA_CENTER: LatLngExpression = [7.9465, -1.0232];
-const GHANA_ZOOM = 7;
 
 export default function DeployPage() {
   const [isMounted, setIsMounted] = useState(false);
   const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [latitudeFilter, setLatitudeFilter] = useState("all");
+  const [devices, setDevices] = useState(mockDevices);
+  const [deployments, setDeployments] = useState([]);
+  const [selectedDevice, setSelectedDevice] = useState("");
+  const [lat, setLat] = useState("");
+  const [lng, setLng] = useState("");
+  const [alertNumbers, setAlertNumbers] = useState("");
 
   useEffect(() => {
     setIsMounted(true);
     loadInitialDeployments();
   }, []);
 
-  const [devices, setDevices] = useState<Device[]>(mockDevices);
-  const [deployments, setDeployments] = useState<Deployment[]>([]);
-  const [selectedDevice, setSelectedDevice] = useState<string>("");
-  const [lat, setLat] = useState<string>("");
-  const [lng, setLng] = useState<string>("");
-  const [alertNumbers, setAlertNumbers] = useState<string>("");
-
-  const handleDeviceSelect = (deviceId: string) => {
+  const handleDeviceSelect = (deviceId) => {
     setSelectedDevice(deviceId);
     const device = devices.find((d) => d.id === deviceId);
     if (device) {
@@ -123,7 +72,7 @@ export default function DeployPage() {
 
   const handleDeploy = () => {
     if (selectedDevice && lat && lng && alertNumbers) {
-      const newDeployment: Deployment = {
+      const newDeployment = {
         id: Date.now().toString(),
         deviceId: selectedDevice,
         lat: parseFloat(lat),
@@ -145,7 +94,6 @@ export default function DeployPage() {
       setDeployments(initialDeployments);
     } catch (error) {
       console.error("Failed to fetch initial deployments:", error);
-      // You might want to show an error message to the user here
     }
   };
 

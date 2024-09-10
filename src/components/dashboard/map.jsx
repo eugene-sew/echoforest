@@ -6,23 +6,13 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
-const GHANA_CENTER: [number, number] = [7.9465, -1.0232];
+const GHANA_CENTER = [7.9465, -1.0232];
 const GHANA_ZOOM = 7;
 
-interface MapProps {
-  deployments: Array<{
-    id: string;
-    deviceId: string;
-    lat: number;
-    lng: number;
-    alertNumbers: string[];
-  }>;
-}
-
-const Map: React.FC<MapProps> = ({ deployments }) => {
+const Map = ({ deployments }) => {
   useEffect(() => {
     // Load Leaflet icon images
-    delete (L.Icon.Default.prototype as any)._getIconUrl;
+    delete L.Icon.Default.prototype._getIconUrl;
     L.Icon.Default.mergeOptions({
       iconRetinaUrl: "/images/marker-icon-2x.png",
       iconUrl: "/images/marker-icon.png",
