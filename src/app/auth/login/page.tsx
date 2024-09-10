@@ -11,10 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export const description =
-  "A login form with email and password. There's an option to login with Google and a link to sign up if you don't have an account.";
-
-const LoginForm = () => {
+export default function LoginPage() {
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader>
@@ -66,6 +63,4 @@ const LoginForm = () => {
       </CardContent>
     </Card>
   );
-};
-
-export default LoginForm;
+}
