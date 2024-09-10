@@ -34,6 +34,7 @@ import { fetchDeployments } from "@/utils/api";
 // Dynamically import MapContainer with no SSR
 const MapWithNoSSR = dynamic(() => import("@/components/dashboard/map"), {
   ssr: false,
+  loading: () => <p>Loading map...</p>,
 });
 
 // Dynamically import TileLayer

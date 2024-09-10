@@ -1,22 +1,9 @@
 "use client";
+
+import { useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-
-import icon from "leaflet/dist/images/marker-icon.png";
-import iconShadow from "leaflet/dist/images/marker-shadow.png";
-
-const DefaultIcon = L.icon({
-  iconUrl: icon.src,
-  shadowUrl: iconShadow.src,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  tooltipAnchor: [16, -28],
-  shadowSize: [41, 41],
-});
-
-L.Marker.prototype.options.icon = DefaultIcon;
 
 const GHANA_CENTER: [number, number] = [7.9465, -1.0232];
 const GHANA_ZOOM = 7;
@@ -32,6 +19,16 @@ interface MapProps {
 }
 
 const Map: React.FC<MapProps> = ({ deployments }) => {
+  useEffect(() => {
+    // Load Leaflet icon images
+    delete (L.Icon.Default.prototype as any)._getIconUrl;
+    L.Icon.Default.mergeOptions({
+      iconRetinaUrl: "/images/marker-icon-2x.png",
+      iconUrl: "/images/marker-icon.png",
+      shadowUrl: "/images/marker-shadow.png",
+    });
+  }, []);
+
   return (
     <MapContainer
       center={GHANA_CENTER}
@@ -46,8 +43,7 @@ const Map: React.FC<MapProps> = ({ deployments }) => {
       {deployments.map((deployment) => (
         <Marker
           key={deployment.id}
-          position={[deployment.lat, deployment.lng]}
-          icon={DefaultIcon}>
+          position={[deployment.lat, deployment.lng]}>
           <Popup>
             Device ID: {deployment.deviceId}
             <br />
