@@ -37,9 +37,12 @@ interface Device {
   powerLevel: number;
   health: string;
   ipAddress: string;
+  macAddress: string;
+  latitude: string;
+  longitude: string;
   temperature: number;
   humidity: number;
-  uptime: number; // Add this line
+  uptime: number;
 }
 
 const mockDevices: Device[] = [
@@ -49,6 +52,9 @@ const mockDevices: Device[] = [
     powerLevel: 80,
     health: "Good",
     ipAddress: "192.168.1.100",
+    macAddress: "00:1A:2B:3C:4D:5E",
+    latitude: "40.7128",
+    longitude: "-74.0060",
     temperature: 25,
     humidity: 60,
     uptime: 86400,
@@ -59,6 +65,9 @@ const mockDevices: Device[] = [
     powerLevel: 20,
     health: "Poor",
     ipAddress: "192.168.1.101",
+    macAddress: "00:2F:3E:4D:5C:6B",
+    latitude: "34.0522",
+    longitude: "-118.2437",
     temperature: 28,
     humidity: 55,
     uptime: 0,
@@ -69,11 +78,26 @@ const mockDevices: Device[] = [
     powerLevel: 60,
     health: "Fair",
     ipAddress: "192.168.1.102",
+    macAddress: "00:3G:4H:5I:6J:7K",
+    latitude: "51.5074",
+    longitude: "-0.1278",
     temperature: 22,
     humidity: 65,
     uptime: 43200,
   },
-  // Add more mock devices as needed
+  {
+    id: "DEV004",
+    status: "online",
+    powerLevel: 90,
+    health: "Good",
+    ipAddress: "192.168.1.103",
+    macAddress: "00:4L:5M:6N:7O:8P",
+    latitude: "48.8566",
+    longitude: "2.3522",
+    temperature: 23,
+    humidity: 58,
+    uptime: 172800,
+  },
 ];
 
 // Utility function for API calls
@@ -313,12 +337,14 @@ export default function DevicesPage() {
               <TableRow>
                 <TableHead>Device ID</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead>Uptime</TableHead>
+                <TableHead>MAC Address</TableHead>
+                <TableHead>IP Address</TableHead>
+                <TableHead>Location</TableHead>
                 <TableHead>Power Level</TableHead>
                 <TableHead>Health</TableHead>
-                <TableHead>IP Address</TableHead>
                 <TableHead>Temperature</TableHead>
                 <TableHead>Humidity</TableHead>
-                <TableHead>Uptime</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -335,6 +361,9 @@ export default function DevicesPage() {
                       {device.status}
                     </span>
                   </TableCell>
+                  <TableCell>{device.macAddress}</TableCell>
+                  <TableCell>{device.ipAddress}</TableCell>
+                  <TableCell>{`${device.latitude}, ${device.longitude}`}</TableCell>
                   <TableCell>
                     {renderBatteryIndicator(device.powerLevel)}
                   </TableCell>
@@ -355,7 +384,6 @@ export default function DevicesPage() {
                       {device.health}
                     </span>
                   </TableCell>
-                  <TableCell>{device.ipAddress}</TableCell>
                   <TableCell>{device.temperature}°C</TableCell>
                   <TableCell>{device.humidity}%</TableCell>
                   <TableCell>{formatUptime(device.uptime)}</TableCell>
