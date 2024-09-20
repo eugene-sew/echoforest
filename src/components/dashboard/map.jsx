@@ -35,11 +35,11 @@ const Map = ({ deployments }) => {
       {deployments.map((deployment) => (
         <Marker
           key={deployment.id}
-          position={[deployment.lat, deployment.lng]}>
+          position={[deployment.latitude, deployment.longitude]}>
           <Popup>
-            Device ID: {deployment.deviceId}
+            Device ID: {deployment.device}
             <br />
-            Alert Numbers: {deployment.alertNumbers.join(", ")}
+            Contact Number: {deployment.contact_number}
           </Popup>
         </Marker>
       ))}
