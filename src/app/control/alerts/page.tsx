@@ -25,7 +25,7 @@ import {
   updateAlertStatus,
   fetchTopRegions,
   fetchTrendData,
-} from "@/utils/api";
+} from "@/utils/api-fallback";
 import { AlertCircle, CheckCircle, AlertTriangle } from "lucide-react";
 import { Pagination } from "@/components/dashboard/pagination";
 import {
@@ -38,6 +38,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { getAlerts } from "@/utils/api_alerts";
 
 interface Alert {
   id: string;
@@ -49,15 +50,7 @@ interface Alert {
   longitude: number;
 }
 
-interface TopRegion {
-  region: string;
-  alertCount: number;
-}
 
-interface TrendData {
-  date: string;
-  alertCount: number;
-}
 
 export default function AlertsPage() {
   const [metrics, setMetrics] = useState({ total: 0, active: 0, resolved: 0 });
@@ -67,14 +60,11 @@ export default function AlertsPage() {
   const [report, setReport] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const alertsPerPage = 10;
-  const [topRegions, setTopRegions] = useState<TopRegion[]>([]);
-  const [trendData, setTrendData] = useState<TrendData[]>([]);
-
+ 
   useEffect(() => {
     fetchAlertMetrics().then(setMetrics);
-    fetchAlerts().then(setAlerts);
-    fetchTopRegions().then(setTopRegions);
-    fetchTrendData().then(setTrendData);
+    getAlerts().then(setAlerts);
+   
   }, []);
 
   const handleManageAlert = (alert: Alert) => {
@@ -153,53 +143,7 @@ export default function AlertsPage() {
         </Card>
       </div>
 
-      <div className="chart-section grid grid-cols-2 gap-4">
-        <Card className="bg-white shadow-lg p-4">
-          <CardHeader>
-            <CardTitle>Top 3 Regions with Most Alerts</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer
-              width="100%"
-              height={300}>
-              <BarChart data={topRegions}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="region" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar
-                  dataKey="alertCount"
-                  fill="#8884d8"
-                />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-white shadow-lg p-4">
-          <CardHeader>
-            <CardTitle>Alert Trend (Last 7 Days)</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer
-              width="100%"
-              height={300}>
-              <BarChart data={trendData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar
-                  dataKey="alertCount"
-                  fill="#82ca9d"
-                />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-      </div>
+    
 
       <div className="alerts-list bg-white p-6 rounded-lg shadow-lg">
         <h2 className="text-2xl font-semibold mb-4 text-gray-800">

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { register } from "@/utils/api_auth";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -18,8 +19,8 @@ import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 
 export default function RegisterPage() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [username, setUsername] = useState("");
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -29,11 +30,18 @@ export default function RegisterPage() {
     e.preventDefault();
     setIsLoading(true);
 
-    // Dummy register handler - replace with actual registration logic later
-    await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate API call
-
-    // For now, just redirect to the login page
-    router.push("/auth/login");
+    try {
+      const token = await register({ username, email, password });
+      // Store the token in localStorage or a secure storage method
+      localStorage.setItem("authToken", token);
+      // Redirect to the login page or dashboard
+      router.push("/auth/login");
+    } catch (error) {
+      console.error("Registration failed:", error);
+      // Handle error (e.g., show error message to user)
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -60,28 +68,20 @@ export default function RegisterPage() {
           <form
             onSubmit={handleRegister}
             className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+          
               <div className="space-y-2">
-                <Label htmlFor="first-name">First name</Label>
+                <Label htmlFor="username">Username</Label>
                 <Input
-                  id="first-name"
+                  id="username"
                   placeholder="John"
                   required
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
+                  value={username}
+                  autoComplete="username"
+                  onChange={(e) => setUsername(e.target.value)}
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="last-name">Last name</Label>
-                <Input
-                  id="last-name"
-                  placeholder="Doe"
-                  required
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                />
-              </div>
-            </div>
+             
+            
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -99,6 +99,7 @@ export default function RegisterPage() {
                 id="password"
                 type="password"
                 required
+                autoComplete="new-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />

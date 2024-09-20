@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { login, setAuthToken } from '@/utils/api_auth'; // Adjust the import path as needed
 
 import { Button } from "@/components/ui/button";
 import {
@@ -18,20 +19,29 @@ import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
+    setError("");
 
-    // Dummy login handler - replace with actual authentication logic later
-    await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate API call
-
-    // For now, just redirect to the dashboard
-    router.push("/control");
+    try {
+      const token = await login({ username, password });
+      console.log("token", token);
+      setAuthToken(token); // Set the token for future authenticated requests
+      console.log("Login successful");
+      router.push("/control"); // Redirect to dashboard
+    } catch (error) {
+      console.error("Login error:", error);
+      setError("Invalid credentials. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -53,18 +63,18 @@ export default function LoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form
-            onSubmit={handleLogin}
-            className="space-y-4">
+          <form onSubmit={handleLogin} className="space-y-4">
+            {error && <div className="text-red-500">{error}</div>}
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="username">Username</Label>
               <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
+                id="username"
+                type="text"
+                placeholder="username"
+              autoComplete="username"
                 required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
               />
             </div>
             <div className="space-y-2">
@@ -80,6 +90,7 @@ export default function LoginPage() {
                 id="password"
                 type="password"
                 required
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />

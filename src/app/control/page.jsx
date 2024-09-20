@@ -22,7 +22,8 @@ import Trend from "@/components/dashboard/trend";
 import Ring from "@/components/dashboard/ring";
 import Map from "@/components/dashboard/map";
 import { Skeleton } from "@/components/ui/skeleton";
-import { fetchDevices, fetchDeployments } from "@/utils/api";
+import { getDevices } from "@/utils/api_device";
+import { getDeployments } from "@/utils/api_deployment";
 
 export default function ControlsPage() {
   const [isMounted, setIsMounted] = useState(false);
@@ -38,8 +39,8 @@ export default function ControlsPage() {
       setIsLoading(true);
       try {
         const [devicesData, deploymentsData] = await Promise.all([
-          fetchDevices(),
-          fetchDeployments(),
+          getDevices(),
+          getDeployments(),
         ]);
         setDevices(devicesData);
         setDeployments(deploymentsData);
@@ -52,6 +53,8 @@ export default function ControlsPage() {
 
     fetchData();
   }, []);
+
+  
   if (!isMounted) {
     return null; // or a loading spinner
   }

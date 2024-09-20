@@ -27,11 +27,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { fetchDeployments } from "@/utils/api";
+import { getDeployments, createDeployment } from "@/utils/api_deployment";
+import { getDeployment } from "@/utils/api_deployment";
 
 const MapWithNoSSR = dynamic(() => import("@/components/dashboard/map"), {
   ssr: false,
   loading: () => <p>Loading map...</p>,
+  
 });
 
 const mockDevices = [
@@ -52,43 +54,53 @@ export default function DeployPage() {
   const [selectedDevice, setSelectedDevice] = useState("");
   const [lat, setLat] = useState("");
   const [lng, setLng] = useState("");
-  const [alertNumbers, setAlertNumbers] = useState("");
+  const [contactNumber, setContactNumber] = useState("");
 
   useEffect(() => {
     setIsMounted(true);
     loadInitialDeployments();
   }, []);
 
-  const handleDeviceSelect = (deviceId) => {
+  const handleDeviceSelect = async (deviceId) => {
     setSelectedDevice(deviceId);
-    const device = devices.find((d) => d.id === deviceId);
-    if (device) {
-      setLat(device.lat.toString());
-      setLng(device.lng.toString());
+    try {
+      const deployment = await getDeployment(parseInt(deviceId));
+      setLat(deployment.latitude.toString());
+      setLng(deployment.longitude.toString());
+      setContactNumber(deployment.contact_number);
+    } catch (error) {
+      console.error("Error fetching device data:", error);
+      // Optionally, you can set an error state here to display to the user
     }
   };
 
-  const handleDeploy = () => {
-    if (selectedDevice && lat && lng && alertNumbers) {
-      const newDeployment = {
-        id: Date.now().toString(),
-        deviceId: selectedDevice,
-        lat: parseFloat(lat),
-        lng: parseFloat(lng),
-        alertNumbers: alertNumbers.split(",").map((num) => num.trim()),
-      };
-      setDeployments((prevDeployments) => [...prevDeployments, newDeployment]);
-      setSelectedDevice("");
-      setLat("");
-      setLng("");
-      setAlertNumbers("");
-      setOpen(false);
+  const handleDeploy = async () => {
+    if (selectedDevice && lat && lng && contactNumber) {
+      try {
+        const newDeployment = await createDeployment({
+          latitude: parseFloat(lat),
+          longitude: parseFloat(lng),
+          contact_number: contactNumber,
+          forest_name: "Default Forest", // You might want to add a field for this
+          device: selectedDevice,
+        });
+        setDeployments((prevDeployments) => [...prevDeployments, newDeployment]);
+        setSelectedDevice("");
+        setLat("");
+        setLng("");
+        setContactNumber("");
+        setOpen(false);
+      } catch (error) {
+        console.error("Failed to create deployment:", error);
+        // You might want to show an error message to the user here
+      }
     }
   };
 
   const loadInitialDeployments = async () => {
     try {
-      const initialDeployments = await fetchDeployments();
+      const initialDeployments = await getDeployments();
+      console.log("loadInitialDeployment", initialDeployments)
       setDeployments(initialDeployments);
     } catch (error) {
       console.error("Failed to fetch initial deployments:", error);
@@ -96,21 +108,25 @@ export default function DeployPage() {
   };
 
   const filteredDeployments = deployments.filter((deployment) => {
+    const searchTermLower = searchTerm.toLowerCase();
     const matchesSearch =
-      deployment.deviceId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      deployment.alertNumbers.some((num) => num.includes(searchTerm));
+      deployment.device.toLowerCase().includes(searchTermLower) ||
+      deployment.contact_number.includes(searchTerm) ||
+      deployment.forest_name.toLowerCase().includes(searchTermLower);
 
     let matchesLatitude = true;
     if (latitudeFilter === "north") {
-      matchesLatitude = deployment.lat >= 7.5;
+      matchesLatitude = deployment.latitude >= 7.5;
     } else if (latitudeFilter === "central") {
-      matchesLatitude = deployment.lat >= 6.5 && deployment.lat < 7.5;
+      matchesLatitude = deployment.latitude >= 6.5 && deployment.latitude < 7.5;
     } else if (latitudeFilter === "south") {
-      matchesLatitude = deployment.lat < 6.5;
+      matchesLatitude = deployment.latitude < 6.5;
     }
 
     return matchesSearch && matchesLatitude;
   });
+
+  console.log("filteredDeployments", filteredDeployments)
 
   return (
     <div className="container mx-auto p-4 ">
@@ -162,7 +178,7 @@ export default function DeployPage() {
                   {devices.map((device) => (
                     <SelectItem
                       key={device.id}
-                      value={device.id}>
+                      value={device.id.toString()}>
                       {device.name}
                     </SelectItem>
                   ))}
@@ -182,9 +198,9 @@ export default function DeployPage() {
               />
               <Input
                 type="text"
-                placeholder="Alert Numbers (comma-separated)"
-                value={alertNumbers}
-                onChange={(e) => setAlertNumbers(e.target.value)}
+                placeholder="Contact Number"
+                value={contactNumber}
+                onChange={(e) => setContactNumber(e.target.value)}
               />
               <Button
                 onClick={handleDeploy}
@@ -202,16 +218,18 @@ export default function DeployPage() {
               <TableHead>Device ID</TableHead>
               <TableHead>Latitude</TableHead>
               <TableHead>Longitude</TableHead>
-              <TableHead>Alert Numbers</TableHead>
+              <TableHead>Contact Numbers</TableHead>
+              <TableHead>Forest Name</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredDeployments.map((deployment) => (
               <TableRow key={deployment.id}>
-                <TableCell>{deployment.deviceId}</TableCell>
-                <TableCell>{deployment.lat}</TableCell>
-                <TableCell>{deployment.lng}</TableCell>
-                <TableCell>{deployment.alertNumbers.join(", ")}</TableCell>
+                <TableCell>{deployment.device}</TableCell>
+                <TableCell>{deployment.latitude.toFixed(6)}</TableCell>
+                <TableCell>{deployment.longitude.toFixed(6)}</TableCell>
+                <TableCell>{deployment.contact_number}</TableCell>
+                <TableCell>{deployment.forest_name}</TableCell>
               </TableRow>
             ))}
           </TableBody>
